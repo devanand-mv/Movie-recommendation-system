@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-powered Movie Recommendation System using Content-Based and Collaborative Filtering algorithms.">
+    <title>CineSuggest AI - Hybrid Movie Recommender</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Main Style Sheet -->
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Top Header -->
+        <header class="app-header">
+            <div class="brand">
+                <span class="logo-icon">🎬</span>
+                <div class="logo-text">
+                    <h1>CineSuggest AI</h1>
+                    <span class="logo-tagline">Hybrid Movie Recommendation Engine</span>
+                </div>
+            </div>
+            <nav class="app-nav">
+                <button class="nav-btn active" id="nav-recommender">Recommender Console</button>
+                <button class="nav-btn" id="nav-docs">How It Works</button>
+            </nav>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="app-main">
+            <!-- RECOMMENDER SECTION -->
+            <section id="recommender-section" class="tab-content active">
+                <div class="split-layout">
+                    <!-- Left Panel: Configurations -->
+                    <div class="card config-card">
+                        <div class="card-header">
+                            <span class="card-icon">⚡</span>
+                            <h2>Recommendation Settings</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="movie-select">Select a Movie you Like</label>
+                                <select id="movie-select" class="movie-dropdown">
+                                    <option value="">Loading movies...</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Recommendation Method</label>
+                                <div class="toggle-container">
+                                    <label class="toggle-btn active" id="btn-content">
+                                        <input type="radio" name="method" value="content" checked style="display:none;">
+                                        <span class="method-title">Content-Based</span>
+                                        <span class="method-desc">Analyzes genre overlaps using TF-IDF representation.</span>
+                                    </label>
+                                    <label class="toggle-btn" id="btn-collaborative">
+                                        <input type="radio" name="method" value="collaborative" style="display:none;">
+                                        <span class="method-title">Collaborative Filtering</span>
+                                        <span class="method-desc">Finds movies with similar user rating profiles (Item-Item CF).</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <button id="btn-generate" class="submit-btn">Generate Recommendations</button>
+                        </div>
+                    </div>
+
+                    <!-- Right Panel: Results -->
+                    <div class="results-container">
+                        <div class="results-header" id="results-headline" style="display:none;">
+                            <h3>Recommendations based on <span id="query-movie-title" class="highlight-purple">Movie</span></h3>
+                            <span class="method-badge" id="active-method-badge">Content-Based</span>
+                        </div>
+                        <div class="empty-state" id="empty-state">
+                            <span class="empty-icon">🍿</span>
+                            <h3>No Movie Selected</h3>
+                            <p>Pick a movie from the configuration panel and choose an algorithm to fetch tailored recommendations.</p>
+                        </div>
+                        <div class="movie-grid" id="movie-grid">
+                            <!-- Movie Cards will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DOCUMENTATION SECTION -->
+            <section id="docs-section" class="tab-content">
+                <div class="docs-layout">
+                    <!-- Column 1: Content Based -->
+                    <div class="card algo-card">
+                        <div class="card-header border-purple">
+                            <span class="card-icon">🏷️</span>
+                            <h2>Content-Based Filtering</h2>
+                        </div>
+                        <div class="card-body">
+                            <h3>How it works:</h3>
+                            <p>Content-based filtering recommends items based on a comparison between the content of the items and a user profile. In this application, we model the "content" of a movie using its genres.</p>
+                            
+                            <div class="step-list">
+                                <div class="step-item">
+                                    <div class="step-number">1</div>
+                                    <div class="step-text">
+                                        <strong>TF-IDF Vectorization</strong>
+                                        We clean and vectorize pipe-separated genres using Term Frequency-Inverse Document Frequency (TF-IDF). This scores the importance of each genre relative to the entire movie catalog.
+                                    </div>
+                                </div>
+                                <div class="step-item">
+                                    <div class="step-number">2</div>
+                                    <div class="step-text">
+                                        <strong>Cosine Similarity</strong>
+                                        We compute the angle between the TF-IDF vectors of all movies:
+                                        \[\text{Similarity}(A, B) = \frac{A \cdot B}{\|A\| \|B\|}\]
+                                        A similarity score of 1.0 represents identical genre categories.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Collaborative Filtering -->
+                    <div class="card algo-card">
+                        <div class="card-header border-pink">
+                            <span class="card-icon">👥</span>
+                            <h2>Collaborative Filtering</h2>
+                        </div>
+                        <div class="card-body">
+                            <h3>How it works:</h3>
+                            <p>Collaborative filtering makes recommendations based on the preferences and ratings of other similar users. This application implements **Item-Item Collaborative Filtering**.</p>
+                            
+                            <div class="step-list">
+                                <div class="step-item">
+                                    <div class="step-number">1</div>
+                                    <div class="step-text">
+                                        <strong>User-Item Rating Matrix</strong>
+                                        We compile user ratings into a large table where rows are movies and columns are users. Unrated cells are set to zero.
+                                    </div>
+                                </div>
+                                <div class="step-item">
+                                    <div class="step-number">2</div>
+                                    <div class="step-text">
+                                        <strong>K-Nearest Neighbors (k-NN)</strong>
+                                        Using Scikit-Learn's `NearestNeighbors` classifier with Cosine Distance, we search for movies whose historical user rating distributions are geometrically closest to the selected movie.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="app-footer-bar">
+            <p>Developed for AI Internship Project &copy; 2026. Powered by Python, Flask, and Scikit-Learn.</p>
+        </footer>
+    </div>
+
+    <!-- MathJax for rendering equations -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- App Logic Script -->
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
