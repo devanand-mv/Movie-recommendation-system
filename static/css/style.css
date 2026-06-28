@@ -235,6 +235,11 @@ label {
     padding-right: 3rem;
 }
 
+.movie-dropdown option {
+    background-color: #120e22;
+    color: var(--text-primary);
+}
+
 .movie-dropdown:hover, .movie-dropdown:focus {
     border-color: var(--primary);
     box-shadow: 0 0 12px rgba(192, 132, 252, 0.15);
