@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
             body: JSON.stringify({
                 movieId: parseInt(movieId),
                 method: selectedMethod,
-                top_n: 6
+                top_n: 12
             })
         })
         .then(res => res.json())

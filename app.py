@@ -36,7 +36,7 @@ def recommend_movies():
         data = request.json
         movie_id = data.get("movieId")
         method = data.get("method", "content") # content or collaborative
-        top_n = data.get("top_n", 6)
+        top_n = data.get("top_n", 12)
         
         if not movie_id:
             return jsonify({"error": "Missing parameter: movieId"}), 400
